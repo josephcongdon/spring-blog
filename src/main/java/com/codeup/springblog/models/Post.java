@@ -10,7 +10,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "VARCHAR(200)", nullable = false)
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -43,6 +43,11 @@ public class Post {
 
     public Post(){
 
+    }
+
+    public Post(String title, String body) {
+        this.title = title;
+        this.body = body;
     }
 
     public Post(String title, String body, long id) {

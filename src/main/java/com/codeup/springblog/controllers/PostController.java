@@ -2,12 +2,10 @@ package com.codeup.springblog.controllers;
 
 import com.codeup.springblog.models.Post;
 import com.codeup.springblog.repositories.PostRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +23,9 @@ public class PostController {
 
     @GetMapping("/posts") //VIEW ALL POSTS
     public String postIndex(Model model){
-         Post post1 = new Post("title 1", "body 1", 1);
-         Post post2 = new Post("title 2", "body 2", 2);
+        List<Post> posts = postsDao.findAll();
 
-        List<Post> post = new ArrayList<>();
-        post.add(post1);
-        post.add(post2);
-
-        model.addAttribute("posts", post);
+        model.addAttribute("posts", postsDao.findAll());
 
         return "posts/index" ;
     }
@@ -55,18 +48,50 @@ public class PostController {
         return "new post here";
     }
 
+    @PostMapping("/posts/{id}/delete")
+    public String deletePost(@PathVariable long id){
+        postsDao.deleteById(id);
+        return "redirect:/posts";
+    }
+
     @GetMapping("/index")
-    public String index(){
+    public String index(Model model){
+        String query= "SELECT * FROM posts";
         // seed posts in the DB
+        List<Post> posts = postsDao.findAll();
         //fetch posts with postsDAO
         //create a posts index view
         //sedn list of objects to index view
+        model.addAttribute(posts);
         return "posts/index";
     }
     @GetMapping("/show")
     public String show(){
         return "posts/show";
     }
+
+    @GetMapping("/posts/{id}/edit")
+   public String returnEditView(@PathVariable long id, Model viewModel){
+        viewModel.addAttribute("posts", postsDao.getById(id));
+        return "posts/edit";
+    }
+
+    @PostMapping("/posts/{id}/edit")
+    public String updatePost(@PathVariable long id, @RequestParam String title, @RequestParam String body){
+        //use the new form to update the existing post in the DB
+        //pull the existing post object from the DB
+        Post post = postsDao.getById(id);
+        //set the title and body to the request param values
+        post.setTitle(title);
+        post.setBody(body);
+        //persist the change in the database with the postDao
+        postsDao.save(post);
+        return "redirect:/posts";
+    }
+
+//    @PostMapping("/posts/{id}/delete")
+//    public String deletePost(@PathVariable )
+
 
         //add an endpoint to send the user an edit posts form/ view
         // create an edit post form
