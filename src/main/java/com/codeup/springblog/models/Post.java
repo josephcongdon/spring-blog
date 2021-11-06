@@ -1,21 +1,49 @@
 package com.codeup.springblog.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
 @Table(name = "posts")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(columnDefinition = "VARCHAR(200)", nullable = false)
+    @Column(nullable = false)
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String body;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<PostImage> images;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Post(){
+    }
+    public Post(String title, String body) {
+        this.title = title;
+        this.body = body;
+    }
+
+    public Post(String title, String body, long id) {
+        this.title = title;
+        this.body = body;
+        this.id = id;
+    }
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -33,26 +61,19 @@ public class Post {
         this.body = body;
     }
 
-    public long getId() {
-        return id;
+    public List<PostImage> getImages() {
+        return images;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setImages(List<PostImage> images) {
+        this.images = images;
     }
 
-    public Post(){
-
+    public User getUser() {
+        return user;
     }
 
-    public Post(String title, String body) {
-        this.title = title;
-        this.body = body;
-    }
-
-    public Post(String title, String body, long id) {
-        this.title = title;
-        this.body = body;
-        this.id = id;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

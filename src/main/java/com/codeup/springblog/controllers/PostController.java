@@ -1,7 +1,10 @@
 package com.codeup.springblog.controllers;
 
 import com.codeup.springblog.models.Post;
+import com.codeup.springblog.models.PostImage;
+import com.codeup.springblog.models.User;
 import com.codeup.springblog.repositories.PostRepository;
+import com.codeup.springblog.repositories.UserRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +19,12 @@ public class PostController {
       //injecting a post dependency
 
     private PostRepository postsDao;
+    private UserRepository usersDao;
+
+    public PostController(PostRepository postsDao, UserRepository usersDao) {
+        this.postsDao = postsDao;
+        this.usersDao = usersDao;
+    }
 
     public PostController(PostRepository postsDao){
         this.postsDao = postsDao;
@@ -43,9 +52,28 @@ public class PostController {
     }
 
     @PostMapping("/posts/create")
-    @ResponseBody
-    public String insert() {
-        return "new post here";
+    public String insert(@RequestParam String title, @RequestParam String body, RequestParam List<String> urls) {
+        List<PostImage> images = new ArrayList<>();
+        User author = usersDao.getById(1L);
+        Post post = new Post(title, body);
+
+        // create list of post image objects to pass to the new post constructor
+        for (String url : urls) {
+            PostImage postImage = new PostImage(url);
+            postImage.setPost(post);
+            images.add(postImage);
+        }
+
+        post.setImages(images);
+
+        post.setUser(author);
+
+        // save a post object with images
+
+        postsDao.save(post);
+
+        // modify the post index view to display post images
+        return "redirect:/posts";
     }
 
     @PostMapping("/posts/{id}/delete")
