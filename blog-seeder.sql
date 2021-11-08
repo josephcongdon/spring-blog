@@ -50,3 +50,4 @@ insert into posts (title, body) values ('American crow', 'Sed ante. Vivamus tort
 insert into posts (title, body) values ('Cereopsis goose', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.');
 insert into posts (title, body) values ('Yellow mongoose', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.');
 insert into posts (title, body) values ('Grouse, sage', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.');
+

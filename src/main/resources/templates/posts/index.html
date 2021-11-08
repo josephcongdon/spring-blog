@@ -1,16 +1,23 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>My Blog</title>
 </head>
 <body>
+
+<h1>Posts</h1>
+
 <div th:each="post : ${posts}">
-    <h1 th:text="${post.title}"></h1>
+    <img width="50" th:src="${image.url}" alt="" th:each="image : ${post.images}">
+    <h3 th:text="${post.title}"></h3>
+    <span>By <span th:text="${post.user.email}"></span></span>
     <p th:text="${post.body}"></p>
-    <form th:action="@{'/posts/' + ${post.id} + '/delete'}" th:method="post">
-        <button>🗑</button>
+    <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit Post</a>
+    <form th:action="@{'/posts/' + ${post.id} + '/delete'}" th:method="POST">
+        <button>Delete Post</button>
     </form>
 </div>
+
 </body>
 </html>

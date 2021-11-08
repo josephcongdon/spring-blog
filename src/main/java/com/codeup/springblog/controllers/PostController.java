@@ -26,10 +26,6 @@ public class PostController {
         this.usersDao = usersDao;
     }
 
-//    public PostController(PostRepository postsDao){
-//        this.postsDao = postsDao;
-//    }
-//
     @GetMapping("/posts") //VIEW ALL POSTS
     public String postIndex(Model model){
         List<Post> posts = postsDao.findAll();
@@ -46,33 +42,22 @@ public class PostController {
     }
 
     @GetMapping("/posts/create") //CREATE NEW POSTS
-    @ResponseBody
     public String create(){
-        return "Here is the post create form...";
+        return "posts/create";
     }
 
     @PostMapping("/posts/create")
-    public String insert(@RequestParam String title, @RequestParam String body, @RequestParam List<String> urls) {
+    public String insert(@RequestParam String title, @RequestParam String body) {
         List<PostImage> images = new ArrayList<>();
         User author = usersDao.getById(1L);
-        Post post = new Post(title, body);
+        Post post = new Post(title, body, author);
 
         // create list of post image objects to pass to the new post constructor
-        for (String url : urls) {
-            PostImage postImage = new PostImage(url);
-            postImage.setPost(post);
-            images.add(postImage);
-        }
-
-        post.setImages(images);
 
         post.setUser(author);
 
-        // save a post object with images
-
         postsDao.save(post);
 
-        // modify the post index view to display post images
         return "redirect:/posts";
     }
 
@@ -85,11 +70,8 @@ public class PostController {
     @GetMapping("/index")
     public String index(Model model){
         String query= "SELECT * FROM posts";
-        // seed posts in the DB
+
         List<Post> posts = postsDao.findAll();
-        //fetch posts with postsDAO
-        //create a posts index view
-        //sedn list of objects to index view
         model.addAttribute(posts);
         return "posts/index";
     }
@@ -117,11 +99,4 @@ public class PostController {
         return "redirect:/posts";
     }
 
-//    @PostMapping("/posts/{id}/delete")
-//    public String deletePost(@PathVariable )
-
-
-        //add an endpoint to send the user an edit posts form/ view
-        // create an edit post form
-        // create another endpoint to handle the post request of editing a post
 }
