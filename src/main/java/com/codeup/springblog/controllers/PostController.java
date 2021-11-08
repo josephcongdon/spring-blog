@@ -26,10 +26,10 @@ public class PostController {
         this.usersDao = usersDao;
     }
 
-    public PostController(PostRepository postsDao){
-        this.postsDao = postsDao;
-    }
-
+//    public PostController(PostRepository postsDao){
+//        this.postsDao = postsDao;
+//    }
+//
     @GetMapping("/posts") //VIEW ALL POSTS
     public String postIndex(Model model){
         List<Post> posts = postsDao.findAll();
@@ -52,7 +52,7 @@ public class PostController {
     }
 
     @PostMapping("/posts/create")
-    public String insert(@RequestParam String title, @RequestParam String body, RequestParam List<String> urls) {
+    public String insert(@RequestParam String title, @RequestParam String body, @RequestParam List<String> urls) {
         List<PostImage> images = new ArrayList<>();
         User author = usersDao.getById(1L);
         Post post = new Post(title, body);

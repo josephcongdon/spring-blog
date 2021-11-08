@@ -11,7 +11,7 @@ public class PostImage {
     @GeneratedValue
     private long id;
 
-    private String url;
+    private String urls;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -21,7 +21,7 @@ public class PostImage {
     }
 
     public PostImage( String url) {
-        this.url = url;
+        this.urls = url;
     }
 
     public long getId() {
@@ -33,11 +33,11 @@ public class PostImage {
     }
 
     public String getUrl() {
-        return url;
+        return urls;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrl(String urls) {
+        this.urls = urls;
     }
 
     public Post getPost() {
