@@ -5,6 +5,7 @@ import com.codeup.springblog.models.PostImage;
 import com.codeup.springblog.models.User;
 import com.codeup.springblog.repositories.PostRepository;
 import com.codeup.springblog.repositories.UserRepository;
+import com.codeup.springblog.services.EmailService;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,20 +19,20 @@ public class PostController {
 
       //injecting a post dependency
 
-    private PostRepository postsDao;
+    private final PostRepository postsDao;
     private UserRepository usersDao;
-
-    public PostController(PostRepository postsDao, UserRepository usersDao) {
+    private final EmailService emailService;
+    public PostController(PostRepository postsDao, UserRepository usersDao, EmailService emailService ) {
         this.postsDao = postsDao;
         this.usersDao = usersDao;
+        this.emailService = emailService;
+
     }
 
     @GetMapping("/posts") //VIEW ALL POSTS
     public String postIndex(Model model){
         List<Post> posts = postsDao.findAll();
-
         model.addAttribute("posts", postsDao.findAll());
-
         return "posts/index" ;
     }
 
@@ -47,10 +48,10 @@ public class PostController {
     }
 
     @PostMapping("/posts/create")
-    public String insert(@RequestParam String title, @RequestParam String body) {
-        List<PostImage> images = new ArrayList<>();
+    public String insert(@ModelAttribute Post post) {
+//        List<PostImage> images = new ArrayList<>();
         User author = usersDao.getById(1L);
-        Post post = new Post(title, body, author);
+//        Post post = new Post(title, body, author);
 
         // create list of post image objects to pass to the new post constructor
 
@@ -83,7 +84,7 @@ public class PostController {
     @GetMapping("/posts/{id}/edit")
    public String returnEditView(@PathVariable long id, Model viewModel){
         viewModel.addAttribute("posts", postsDao.getById(id));
-        return "posts/edit";
+        return "/posts/edit";
     }
 
     @PostMapping("/posts/{id}/edit")

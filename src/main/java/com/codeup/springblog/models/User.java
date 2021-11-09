@@ -11,14 +11,33 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false, length = 23)
     private String username;
-
+    @Column(nullable = false)
     private String email;
-
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL,  mappedBy = "user")
     private List<Post> posts;
+
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+//    private List<Ad> ads;
+
+    public User(User copy) {
+        id = copy.id; // This line is SUPER important! Many things won't work if it's absent
+        email = copy.email;
+        username = copy.username;
+        password = copy.password;
+    }
+
+
+    public User(long id, String username, String email, String password) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     public User() {
     }

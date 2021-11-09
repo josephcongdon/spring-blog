@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:insert="partials/partials.html :: head('Edit Post')"></head>
+<body>
+<nav th:insert="partials/partials.html :: navbar"></nav>
+<header th:insert="partials/partials.html :: header('Edit Post')"></header>
+<main class="container">
+    <form th:insert="partials/partials.html :: post-form(@{/posts/{id}/edit(id=${id})}, 'Edit Post')"></form>
+</main>
+<th:block th:insert="partials/partials.html :: bootstrap-js" />
+</body>
+</html>

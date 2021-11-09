@@ -1,12 +1,32 @@
 package com.codeup.springblog.models;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 public class Coffee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private  long id;
+
+        @Column(nullable = false, length = 6)
         private String roast;
+        @Column(nullable = false, length = 50)
         private String origin;
+        @Column(nullable = false, length = 50)
         private String brand;
 
+        public String getBrand() {
+            return brand;
+        }
 
-    public Coffee() {
+        public void setBrand(String brand) {
+            this.brand = brand;
+        }
+
+        public Coffee() {
+
         }
 
         public Coffee(String roast, String brand) {
@@ -14,7 +34,13 @@ public class Coffee {
             this.brand = brand;
         }
 
-        public String getRoast() {
+    public Coffee(String roast, String origin, String brand) {
+        this.roast = roast;
+        this.origin = origin;
+        this.brand = brand;
+    }
+
+    public String getRoast() {
             return roast;
         }
 
@@ -22,13 +48,7 @@ public class Coffee {
             this.roast = roast;
         }
 
-    public String getBrand() {
-        return brand;
-    }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
         public String getOrigin() {
             return origin;
         }
