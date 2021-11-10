@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--<div th:insert="partials/partials.html :: counter" ></div>-->
+
+<form th:object="${counterObject}" th:fragment="counter" th:action="@{/counter/{id}(id=${counterObject.get().getId()})}" method="POST">
+    <div>
+        <label for="counter">Counter</label>
+        <p th:text="${counterObject.get().getQuantity()}" id="counter">Display Number:</p>
+        <input type="hidden" th:value="${counterObject.get().getId()}"/>
+        <button th:value="increment" name="increment"  type="submit">+</button>
+        <button th:value="decrement" name="decrement" type="submit">-</button>
+    </div>
+</form>
+</body>
+</html>

@@ -7,6 +7,7 @@ import com.codeup.springblog.repositories.PostRepository;
 import com.codeup.springblog.repositories.UserRepository;
 import com.codeup.springblog.services.EmailService;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,56 +30,33 @@ public class PostController {
 
     }
 
-    @GetMapping("/posts") //VIEW ALL POSTS
-    public String postIndex(Model model){
+    @GetMapping("/posts")
+    public String index(Model viewModel) {
         List<Post> posts = postsDao.findAll();
-        model.addAttribute("posts", postsDao.findAll());
-        return "posts/index" ;
+        viewModel.addAttribute("posts", posts);
+        return "posts/index";
     }
 
-    @GetMapping("/posts/{id}") //INDIVIDUAL POSTS CAPITAL M MODEL is a spring view
-    public long showId(@PathVariable long id, Model model){
-        model.addAttribute("id", id);
-        return id;
-    }
+//    @GetMapping("/posts/{id}") //INDIVIDUAL POSTS CAPITAL M MODEL is a spring view
+//    public long showId(@PathVariable long id, Model model){
+//        model.addAttribute("id", id);
+//        return id;
+//    }
 
     @GetMapping("/posts/create") //CREATE NEW POSTS
-    public String create(){
+    public String create(Model model){
+        model.addAttribute("post", new Post());
         return "posts/create";
     }
 
     @PostMapping("/posts/create")
     public String insert(@ModelAttribute Post post) {
-//        List<PostImage> images = new ArrayList<>();
-        User author = usersDao.getById(1L);
-//        Post post = new Post(title, body, author);
-
-        // create list of post image objects to pass to the new post constructor
-
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User author = usersDao.getById(principal.getId());
         post.setUser(author);
-
         postsDao.save(post);
-
+        emailService.prepareAndSend(post, "You submitted: " + post.getTitle(), post.getBody());
         return "redirect:/posts";
-    }
-
-    @PostMapping("/posts/{id}/delete")
-    public String deletePost(@PathVariable long id){
-        postsDao.deleteById(id);
-        return "redirect:/posts";
-    }
-
-    @GetMapping("/index")
-    public String index(Model model){
-        String query= "SELECT * FROM posts";
-
-        List<Post> posts = postsDao.findAll();
-        model.addAttribute(posts);
-        return "posts/index";
-    }
-    @GetMapping("post/{id}/show")
-    public String show(){
-        return "posts/show";
     }
 
     @GetMapping("/posts/{id}/edit")
@@ -86,6 +64,19 @@ public class PostController {
         viewModel.addAttribute("posts", postsDao.getById(id));
         return "/posts/edit";
     }
+
+    @GetMapping("/index")
+    public String showIndex(Model model){
+        String query= "SELECT * FROM posts";
+        List<Post> posts = postsDao.findAll();
+        model.addAttribute(posts);
+        return "posts/index";
+    }
+        @GetMapping("/posts/{id}")
+        @ResponseBody
+        public String show(@PathVariable long id) {
+            return "Here is the post " + id;
+        }
 
     @PostMapping("/posts/{id}/edit")
     public String updatePost(@PathVariable long id, @RequestParam String title, @RequestParam String body){
@@ -97,6 +88,12 @@ public class PostController {
         post.setBody(body);
         //persist the change in the database with the postDao
         postsDao.save(post);
+        return "redirect:/posts";
+    }
+
+    @PostMapping("/posts/{id}/delete")
+    public String deletePost(@PathVariable long id){
+        postsDao.deleteById(id);
         return "redirect:/posts";
     }
 
