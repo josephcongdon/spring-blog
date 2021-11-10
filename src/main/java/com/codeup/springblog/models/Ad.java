@@ -17,7 +17,8 @@ public class Ad {
     @Column(columnDefinition = "TEXT NOT NULL")
     private String description;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     public Ad() {

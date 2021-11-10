@@ -76,7 +76,7 @@ public class PostController {
         model.addAttribute(posts);
         return "posts/index";
     }
-    @GetMapping("/show")
+    @GetMapping("post/{id}/show")
     public String show(){
         return "posts/show";
     }
