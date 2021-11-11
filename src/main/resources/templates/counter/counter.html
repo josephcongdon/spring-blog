@@ -16,6 +16,17 @@
         <button th:value="increment" name="increment"  type="submit">+</button>
         <button th:value="decrement" name="decrement" type="submit">-</button>
     </div>
+
+</form>
+<br/>
+<form th:object="${counterObject}" th:fragment="counter" th:action="@{/counter/{id}(id=${counterObject.get().getId()})}" method="POST">
+    <div>
+        <label for="counter">Counter</label>
+        <p th:text="${counterObject.get().getQuantity()}" id="counter1">Display Number:</p>
+        <input type="hidden" th:value="${counterObject.get().getId()}"/>
+        <button th:value="increment" name="increment"  type="submit">+</button>
+        <button th:value="decrement" name="decrement" type="submit">-</button>
+    </div>
 </form>
 </body>
 </html>

@@ -19,7 +19,6 @@ public class CounterController {
 
     @GetMapping("/counter")
     public String getCounter(Model model){
-
         model.addAttribute("counterObject", counterDao.findById(1L));
         return"counter/counter";
     }
@@ -35,11 +34,11 @@ public class CounterController {
         System.out.println(decrement);
         //ads new counter object, can't use
         Optional<Counter> editCounter = counterDao.findById(id);
-        editCounter.get().setName("user2");
+        editCounter.get().setName("user3");
         if(increment == null){
             editCounter.get().decrement();
             counterDao.save(editCounter.get());
-        } else if(decrement == null ){
+        } else if(decrement == null){
             editCounter.get().increment();
             counterDao.save(editCounter.get());
         }
