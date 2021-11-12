@@ -33,14 +33,15 @@ public class CounterController {
         System.out.println(increment);
         System.out.println(decrement);
         //ads new counter object, can't use
-        Optional<Counter> editCounter = counterDao.findById(id);
-        editCounter.get().setName("user3");
+        Counter editCounter  = counterDao.findById(id).orElse(new Counter());
+//        editCounter.get().setName("user3");
+        editCounter.setName("user3");
         if(increment == null){
-            editCounter.get().decrement();
-            counterDao.save(editCounter.get());
+            editCounter.decrement();
+            counterDao.save(editCounter);
         } else if(decrement == null){
-            editCounter.get().increment();
-            counterDao.save(editCounter.get());
+            editCounter.increment();
+            counterDao.save(editCounter);
         }
         return "redirect:/counter";
     }
