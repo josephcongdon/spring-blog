@@ -35,7 +35,7 @@ public class CounterController {
         //ads new counter object, can't use
         Counter editCounter  = counterDao.findById(id).orElse(new Counter());
 //        editCounter.get().setName("user3");
-        editCounter.setName("user3");
+        editCounter.getId();
         if(increment == null){
             editCounter.decrement();
             counterDao.save(editCounter);
